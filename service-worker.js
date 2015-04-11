@@ -1,47 +1,81 @@
-self.addEventListener('push', function(event) {  
-  // Since there is no payload data with the first version  
-  // of push messages, we'll grab some data from  
-  // an API and use it to populate a notification  
-  event.waitUntil(  
-    fetch('abc.json').then(function(response) {  
-      if (response.status !== 200) {  
-        // Either show a message to the user explaining the error  
-        // or enter a generic message and handle the   
-        // onnotificationclick event to direct the user to a web page  
-        console.log('Looks like there was a problem. Status Code: ' + response.status);  
-      throw new Error();  
-      }
+'use strict';
 
-      // Examine the text in the response  
-      return response.json().then(function(data) {  
-        if (data.error || !data.notification) {  
-          console.error('The API returned an error.', data.error);  
-          throw new Error();  
-        }  
-          
-        var title = 'data.notification.title';  
-        var message = 'data.notification.message';  
-        var icon = 'data.notification.icon';  
-        var notificationTag = 'data.notification.tag';
+var YAHOO_WEATHER_API_ENDPOINT = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22london%2C%20uk%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys';
+var KEY_VALUE_STORE_NAME = 'key-value-store';
 
-        return self.registration.showNotification(title, {  
-          body: message,  
-          icon: icon,  
-          tag: notificationTag  
-        });  
-      });  
-    }).catch(function(err) {  
-      console.error('Unable to retrieve data', err);
+var idb;
+var usePlainNotification = false;
 
-      var title = 'An error occurred';
-      var message = 'We were unable to get the information for this push message';  
-      var icon = URL_TO_DEFAULT_ICON;  
-      var notificationTag = 'notification-error';  
-      return self.registration.showNotification(title, {  
-          body: message,  
-          icon: icon,  
-          tag: notificationTag  
-        });  
-    })  
-  );  
+// avoid opening idb until first call
+// function getIdb() {
+//   if (!idb) {
+//     idb = new IndexDBWrapper('key-value-store', 1, function(db) {
+//       db.createObjectStore(KEY_VALUE_STORE_NAME);
+//     });
+//   }
+//   return idb;
+// }
+
+function sendToServer() {
+  // TODO: implment ;)
+}
+
+self.addEventListener('push', function(event) {
+
+  console.log('Received a push message', event);
+
+  if (usePlainNotification) {
+    var title = 'Push Notifcations';
+    var message = 'On the Open Web - Whoop Whoop';
+    var icon = 'images/successkid.jpg';
+    var notificationTag = 'simple-push-demo-notification';
+
+    event.waitUntil(
+      self.registration.showNotification(title, {
+        body: message,
+        icon: icon,
+        tag: notificationTag
+      })
+    );
+    return;
+  }
+
+  // Since this is no payload data with the first version
+  // of Push notifications, here we'll grab some data from
+  // an API and use it to populate a notification
+  event.waitUntil(
+    fetch('abc.json').then(function(response) {
+    
+
+      // Examine the text in the response
+
+        var title = 'This is noti noti?';
+        var message = 'this is body';
+        var icon = 'icon.jpg'
+        var notificationTag = 'Tag name';
+
+        // Add this to the data of the notification
+        var urlToOpen = 'http://www.goibibo.com';
+
+        // Since Chrome doesn't support data at the moment
+        // Store the URL in IndexDB
+        // getIdb().put(KEY_VALUE_STORE_NAME, notificationTag, urlToOpen);
+
+        return self.registration.showNotification(title, {
+          body: message,
+          icon: icon,
+          tag: notificationTag,
+          url : urlToOpen
+        });
+    })
+  );
 });
+
+self.addEventListener('notificationclick', function(event) {
+  
+  console.log('On notification click: ', event);
+
+  
+    console.log('clicked')
+});
+

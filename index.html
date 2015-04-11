@@ -1,14 +1,56 @@
-<!DOCTYPE html>
+<!doctype html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web Starter Kit</title>
 
-<head>
-	<link rel="manifest" href="manifest.json">
-</head>
+    <!-- Add to homescreen -->
+    <link rel="manifest" href="manifest.json">
 
-<body>
+  </head>
+  <body>
 
-<button type="button" id="perButtn" >Permission</button>
+    <header>
+      <h1>Push Demo</h1>
+    </header>
+    
+    <main>
+      <div class="js-push-switch-container">
+        <label class="wsk-switch wsk-js-switch wsk-js-ripple-effect" for="enable-push">
+          <input type="checkbox" id="enable-push" class="wsk-switch__input js-enable-push" disabled />
+          <span class="wsk-switch__label">Enable Push Notifications</span>
+        </label>
+      </div>
 
-<script src="app.js" ></script>
-</body>
+      <div class="content-overlap-wrapper">
+        <div class="send-push-options js-send-push-options">
+          <p class="center">
+            <button class="xhr-button js-xhr-button wsk-button wsk-js-button wsk-button--colored wsk-js-ripple-effect">
+              Send a Push to GCM via XHR
+            </button>
+          </p>
+          
+          <p class="center">OR</p>
 
+          <p>Copy and paste the following CURL command into your terminal
+          to send a push message to your browser.</p>
+
+          <code class="curl-code-example js-curl-code"></code>
+        </div>
+        <div class="error-message-container js-error-message-container">
+          <h1 class="error-title js-error-title"></h1>
+          <p class="error-message js-error-message"></p>
+        </div>
+      </div>
+  
+    </main>
+
+    <!-- build:js(app/) ../../scripts/main.min.js -->
+    <script src="app.js"></script>
+    <!-- endbuild -->
+
+  </body>
 </html>
